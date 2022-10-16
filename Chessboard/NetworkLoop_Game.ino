@@ -459,7 +459,11 @@ void streamGame_opponentGone(DynamicJsonDocument& jsonDoc) {
     opponentIsGoneDrawDirty = true;
 
     if(opponentIsGone) {
-        opponentGoneTimeLeftMs = jsonDoc["gone"].as<int>() * 1000;
+        if(jsonDoc.containsKey("claimWinInSeconds")) {
+            opponentGoneTimeLeftMs = jsonDoc["claimWinInSeconds"].as<int>() * 1000;
+        } else {
+            opponentGoneTimeLeftMs = 0;
+        }
         opponentGoneTimeLeftWhenReceivedMs = opponentGoneTimeLeftMs;
         opponentGoneTimeReceivedMs = millis();
     }

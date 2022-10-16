@@ -553,7 +553,13 @@ void mainLoop_Game() {
         if(gameState == GameState::WaitingToReceiveOpponentMove &&
            opponentIsGoneDrawDirty)
         {
-            if(opponentIsGone) {
+            if(opponentIsGone &&
+               !notificationOpponentRefusesDraw &&
+               !notificationOpponentOffersDraw &&
+               !notificationOpponentOffersMoveTakeback &&
+               !notificationOpponentPromotes &&
+               !notificationVictoryClaimRefused
+            ) {
                 ShortString newLabelStr = prettifyTime(opponentGoneTimeLeftMs);
                 currentMenu.titles[1].text = ShortString("Oppon. left: ")  + newLabelStr;
                 currentMenu.titles[1].centerX();
