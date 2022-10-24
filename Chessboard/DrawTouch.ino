@@ -82,8 +82,18 @@ void drawBoardBoolOrChar(bool squares[8][8], char pieces[8][8]) {
                     );
                 }
             } else if (pieces) {
-                // draw marker if piece on square
-                if(pieces[i][8-j-1] > 0) {
+                // get piece index with correct board orientation depending on player color
+                int pieceIndexX;
+                int pieceIndexY;
+                if(playerColor == PlayerColor::White) {
+                    pieceIndexX = i;
+                    pieceIndexY = 8-j-1;
+                } else {
+                    pieceIndexX = 8-i-1;
+                    pieceIndexY = j;
+                }
+
+                if(pieces[pieceIndexX][pieceIndexY] > 0) {
                     Vector2i cursor;
                     cursor.x =   topLeftPos.x
                                + (i+0.5)*drawBoardSquareSize
@@ -91,8 +101,8 @@ void drawBoardBoolOrChar(bool squares[8][8], char pieces[8][8]) {
                     cursor.y =   topLeftPos.y
                                + (j+0.5)*drawBoardSquareSize
                                + drawBoardFont->yAdvance/2 + 1;
-                    
-                    switch(pieces[i][8-j-1]) {
+
+                    switch(pieces[pieceIndexX][pieceIndexY]) {
                     case 'K':
                         drawChessChar(cursor, FONT_PIECE_WHITE_K_BLACKLAYER,
                                               FONT_PIECE_WHITE_K_WHITELAYER);
