@@ -54,6 +54,14 @@ void setup() {
     twoPlayersIncrement = PersistentParamLoadInt(PersistentParamType::TwoPlayersIncrement);
     PersistentParamEnd();
 
+    twoPlayersTimePerSide = clamp(twoPlayersTimePerSide,
+                                  twoPlayersTimePerSideMin,
+                                  twoPlayersTimePerSideMax);
+
+    twoPlayersIncrement = clamp(twoPlayersIncrement,
+                                twoPlayersIncrementMin,
+                                twoPlayersIncrementMax);
+
 
 #if defined(BOARD_DEF_ESP32)
     bus = Arduino_ESP32SPI(PIN_TFT_DC, PIN_TFT_CS, PIN_TFT_SCK, PIN_TFT_MOSI, PIN_TFT_MISO);
@@ -83,8 +91,8 @@ void setup() {
     // we want to keep that thread running smoothly if possible.
     xTaskCreatePinnedToCore( ledLoop, "ledLoop", ledTaskStackSize, NULL, 2, &ledTask, BaseType_t(1));
 #elif defined(BOARD_DEF_RP2040)
-    // TODO
-    // use multicore_launch_core1 ?
+    multicore_launch_core1(networkLoop);
+    //StartLichessStream();
 #endif
 
     for(int i = 0; i < 8; i++) {

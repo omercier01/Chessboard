@@ -276,7 +276,7 @@
     void PersistentParamEnd() {
         PersistentParams* ptr = (PersistentParams*) EEPROM.getDataPtr();
         persistentParams.CopyToPtr(ptr);
-        //EEPROM.commit();
+        EEPROM.commit();
     }
 
     

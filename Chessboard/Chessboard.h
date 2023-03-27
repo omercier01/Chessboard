@@ -116,8 +116,8 @@
 
 // making this too large creates random problems (e.g. HTTP requests failing because not enough memory)
 // ideally would be 6000 to cover possible max moves, but 1400 is plenty
-//#define MAX_NB_MOVES 1400
-#define MAX_NB_MOVES 100
+#define MAX_NB_MOVES 1400
+//#define MAX_NB_MOVES 100
 
 // sizes for custom fixed-length strings (to avoid allocating too much Strings on the heap)
 #define SHORT_STRING_LENGTH 32
@@ -315,7 +315,7 @@ Move userMove;
 
 // looks like I need to slow this down if the display wires are longer
 //const int32_t displaySpeed = 32 * 1000 * 1000;
-const int32_t displaySpeed = 8 * 1000 * 1000;
+const int32_t displaySpeed = 32 * 1000 * 1000;
 
 Menu currentMenu;
 enum class MenuType {
@@ -440,21 +440,21 @@ struct GameSeekInfo {
 GameSeekInfo gameSeekInfo;
 
 
-LongString wifiName;
-LongString wifiPassword;
-LongString lichessToken;
-LongString lichessBoardAccountUsername;
-LongString lichessBoardAccountToken;
+LongString wifiName = "";
+LongString wifiPassword = "";
+LongString lichessToken = "";
+LongString lichessBoardAccountUsername = "";
+LongString lichessBoardAccountToken = "";
 
 bool streamsDirty = true;
 
-ShortString playerStartRatingStr;
-ShortString playerEndRatingStr;
-LongString playerName;
-ShortString opponentStartRatingStr;
-ShortString opponentEndRatingStr;
-LongString opponentName;
-ShortString gameSpeedStr;
+ShortString playerStartRatingStr = "";
+ShortString playerEndRatingStr = "";
+LongString playerName = "";
+ShortString opponentStartRatingStr = "";
+ShortString opponentEndRatingStr = "";
+LongString opponentName = "";
+ShortString gameSpeedStr = "";
 ShortString gameSeekOrFoundButtonText = "";
 
 

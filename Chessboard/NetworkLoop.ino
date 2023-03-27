@@ -12,9 +12,17 @@ void StartLichessStream() {
 
     WiFi.begin(strdup(wifiName.c_str()), wifiPassword.c_str());
     while (WiFi.status() != WL_CONNECTED)
+    //while (true)
     {
+        Serial.println(wifiName.c_str());
+        Serial.println(wifiPassword.c_str());
         delay(500);
     }
+
+    Serial.println("Connected.");
+
+    httpClientStream->setInsecure();
+    httpClientApi->setInsecure();
 }
 
 
@@ -23,6 +31,8 @@ void getPlayerStream() {
     while(!success) {
         httpClientStream->begin("https://lichess.org/api/stream/event");
         httpClientStream->addHeader("Authorization", (LongString("Bearer ") + lichessToken).c_str());
+        //httpClientStream->begin("http://httpbin.org");
+        //httpClientStream->begin("https://www.httpvshttps.com/");
         int httpCode = httpClientStream->GET();
         Serial.println("player stream httpCode: " + String(httpCode));
         if(httpCode > 0) {
@@ -38,6 +48,8 @@ void getPlayerStream() {
         } else {
             // stream failed
         }
+
+        delay(10000);
     }
 }
 
@@ -111,12 +123,15 @@ void sendMove(Move move) {
     
 }
 
+#if defined(BOARD_DEF_ESP32)
+    void networkLoop(void* /*parameter*/) {
+#elif defined(BOARD_DEF_RP2040)
+    void networkLoop() {
+#endif
 
-void networkLoop(void* /*parameter*/) {
+    StartLichessStream();
 
-//    StartLichessStream();
-
-    //while(true) {
+    while(true) {
 
         if(gameState == GameState::Error) {
             //break;
@@ -124,7 +139,7 @@ void networkLoop(void* /*parameter*/) {
         }
 
         wl_status_t wifiStatus = wl_status_t(WiFi.status());
-        Serial.println((LongString("wifi status: ") + ShortString(wifiStatus)).c_str());
+        //Serial.println((LongString("wifi status: ") + ShortString(wifiStatus)).c_str());
         if(wifiStatus != wl_status_t::WL_CONNECTED) {
             streamsDirty = true;
 
@@ -517,10 +532,10 @@ void networkLoop(void* /*parameter*/) {
         // some delay here otherwise some thread watchdog complains that the core is idle.
         // could be much smaller, like 10ms
         delay(200); 
-    //}
+    }
 
-    // // empty infinite loop after error message is displayed
-    // while(true) {
-    //     delay(100);
-    // }
+    // empty infinite loop after error message is displayed
+    while(true) {
+        delay(100);
+    }
 }
