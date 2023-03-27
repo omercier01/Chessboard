@@ -112,17 +112,18 @@ void sendMove(Move move) {
 }
 
 
-void networkLoop(void* parameter) {
+void networkLoop(void* /*parameter*/) {
 
-    StartLichessStream();
+//    StartLichessStream();
 
-    while(true) {
+    //while(true) {
 
         if(gameState == GameState::Error) {
-            break;
+            //break;
+            return;
         }
 
-        wl_status_t wifiStatus = WiFi.status();
+        wl_status_t wifiStatus = wl_status_t(WiFi.status());
         Serial.println((LongString("wifi status: ") + ShortString(wifiStatus)).c_str());
         if(wifiStatus != wl_status_t::WL_CONNECTED) {
             streamsDirty = true;
@@ -130,7 +131,8 @@ void networkLoop(void* parameter) {
             bGameStateDirty = true;
             gameState = GameState::Connecting;
 
-            continue;
+            //continue;
+            return;
         }
 
         if(wifiStatus == wl_status_t::WL_CONNECTED && streamsDirty) {
@@ -165,10 +167,10 @@ void networkLoop(void* parameter) {
 
         // Send dummy move to keep the connection alive
         if(gameId != "" &&
-           millis() - timeLastDummyMovePost > timeRefreshDummyMovePost)
+           long(millis()) - timeLastDummyMovePost > timeRefreshDummyMovePost)
         {
             // just to make sure we're not running out of memory, useful for debugging
-            Serial.println((ShortString("getFreeHeap: ") + ShortString(int(ESP.getFreeHeap()))).c_str());
+            Serial.println((ShortString("getFreeHeap: ") + ShortString(int(rp2040.getFreeHeap()))).c_str());
 
             Serial.println("Sending dummy move");
 
@@ -197,7 +199,8 @@ void networkLoop(void* parameter) {
                 errorMessage[2] = "";
                 errorMessage[3] = "Please reboot.";
                 bGameStateDirty = true;
-                break; // break out of while(true);;
+                //break; // break out of while(true);
+                return;
             }
 
             timeLastDummyMovePost = millis();
@@ -229,7 +232,8 @@ void networkLoop(void* parameter) {
                 errorMessage[2] = "";
                 errorMessage[3] = "Please reboot.";
                 bGameStateDirty = true;
-                break; // break out of while(true)
+                //break; // break out of while(true)
+                return;
             }
 
             sendTakebackRefusal = false;
@@ -260,7 +264,8 @@ void networkLoop(void* parameter) {
                 errorMessage[1] = "";
                 errorMessage[2] = "Please reboot.";
                 bGameStateDirty = true;
-                break; // break out of while(true)
+                //break; // break out of while(true)
+                return;
             }
 
             sendRefuseDraw = false;
@@ -292,7 +297,8 @@ void networkLoop(void* parameter) {
                 errorMessage[1] = "";
                 errorMessage[2] = "Please reboot.";
                 bGameStateDirty = true;
-                break; // break out of while(true)
+                //break; // break out of while(true)
+                return;
             }
 
             if(isTwoPlayersGame) {
@@ -322,7 +328,8 @@ void networkLoop(void* parameter) {
                     errorMessage[1] = "";
                     errorMessage[2] = "Please reboot.";
                     bGameStateDirty = true;
-                    break; // break out of while(true)
+                    //break; // break out of while(true)
+                    return;
                 }
             }
 
@@ -360,7 +367,8 @@ void networkLoop(void* parameter) {
                 errorMessage[1] = "";
                 errorMessage[2] = "Please reboot.";
                 bGameStateDirty = true;
-                break; // break out of while(true)
+                //break; // break out of while(true)
+                return;
             }
 
             sendResign = false;
@@ -394,7 +402,8 @@ void networkLoop(void* parameter) {
                 errorMessage[1] = "";
                 errorMessage[2] = "Please reboot.";
                 bGameStateDirty = true;
-                break; // break out of while(true)
+                //break; // break out of while(true)
+                return;
             }
 
             sendClaimVictory = false;
@@ -500,17 +509,18 @@ void networkLoop(void* parameter) {
                 errorMessage[1] = "";
                 errorMessage[2] = "Please reboot.";
                 bGameStateDirty = true;
-                break; // break out of while(true);
+                //break; // break out of while(true);
+                return;
             }
         }
 
         // some delay here otherwise some thread watchdog complains that the core is idle.
         // could be much smaller, like 10ms
         delay(200); 
-    }
+    //}
 
-    // empty infinite loop after error message is displayed
-    while(true) {
-        delay(100);
-    }
+    // // empty infinite loop after error message is displayed
+    // while(true) {
+    //     delay(100);
+    // }
 }

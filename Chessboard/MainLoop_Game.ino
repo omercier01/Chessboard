@@ -667,7 +667,7 @@ void mainLoop_Game() {
     }
     
     Vector2 touchPos;
-    if(IsDisplayTouchedTimeBuffer(touchPos)) {
+    if(IsDisplayTouchedTimeBuffer(touchPos, true)) {
         currentMenu.onClick(touchPos);
     }
 

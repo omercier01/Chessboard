@@ -25,7 +25,7 @@ Vector2 getPromotionZomeWidth() {
 }
 
 Vector2 getCalibratedTouchPos() {
-    TS_Point touchP = pTouch->getPoint();
+    TS_Point touchP = TouchscreenGetPoint();
     
     Vector2 p;
     TouchCalibrationData& tc = touchCalibrationData;
@@ -36,12 +36,12 @@ Vector2 getCalibratedTouchPos() {
 
 
 void drawChessChar(Vector2i cursor, char blackLayer, char whiteLayer) {
-    pDisplay->setCursor(cursor.x, cursor.y);
-    pDisplay->setTextColor(BLACK);
-    pDisplay->print(blackLayer);
-    pDisplay->setCursor(cursor.x, cursor.y);
-    pDisplay->setTextColor(WHITE);
-    pDisplay->print(whiteLayer);
+    DisplaySetCursor(cursor.x, cursor.y);
+    DisplaySetTextColor(BLACK);
+    DisplayPrintChar(blackLayer);
+    DisplaySetCursor(cursor.x, cursor.y);
+    DisplaySetTextColor(WHITE);
+    DisplayPrintChar(whiteLayer);
 }
 
 
@@ -51,7 +51,7 @@ void drawBoardBoolOrChar(bool squares[8][8], char pieces[8][8]) {
                                        drawBoardSquarePosY);
 
     if(pieces) {
-        pDisplay->setFont(drawBoardFont);
+        DisplaySetFont(drawBoardFont);
     }
 
     // draw contour
@@ -62,7 +62,7 @@ void drawBoardBoolOrChar(bool squares[8][8], char pieces[8][8]) {
     // draw grid
     for(int i = 0; i < 8; i++) {
         for(int j = 0; j < 8; j++) {
-            pDisplay->fillRect(
+            DisplayFillRect(
                 topLeftPos.x + i*drawBoardSquareSize,
                 topLeftPos.y + j*drawBoardSquareSize,
                 drawBoardSquareSize,
@@ -74,7 +74,7 @@ void drawBoardBoolOrChar(bool squares[8][8], char pieces[8][8]) {
             if(squares) {
                 // draw marker if piece on square
                 if(squares[i][8-j-1]) {
-                    pDisplay->fillCircle(
+                    DisplayFillCircle(
                         topLeftPos.x + i*drawBoardSquareSize + drawBoardSquareSize/2,
                         topLeftPos.y + j*drawBoardSquareSize + drawBoardSquareSize/2,
                         (drawBoardSquareSize - 2*drawBoardBoolMarkerBorder)/2,
@@ -160,6 +160,7 @@ void drawBoardBoolOrChar(bool squares[8][8], char pieces[8][8]) {
 
 
 void drawBoardBool(bool squares[8][8]) {
+    (void)squares;
     drawBoardBoolOrChar(clientBoardBool, nullptr);
 }
 

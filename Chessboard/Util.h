@@ -3,6 +3,36 @@
 
 #include "FixedString.h"
 
+
+#if defined(BOARD_DEF_RP2040)
+    // copied from library XPT2046_Touchscreen/XPT2046_Touchscreen.h
+    class TS_Point {
+    public:
+        TS_Point(void) : x(0), y(0), z(0) {}
+        TS_Point(int16_t x, int16_t y, int16_t z) : x(x), y(y), z(z) {}
+        bool operator==(TS_Point p) { return ((p.x == x) && (p.y == y) && (p.z == z)); }
+        bool operator!=(TS_Point p) { return ((p.x != x) || (p.y != y) || (p.z != z)); }
+        int16_t x, y, z;
+    };
+#endif
+
+bool TouchscreenIsTouched();
+TS_Point TouchscreenGetPoint();
+
+void DisplayFillScreen(uint16_t color);
+void DisplayFillRect(int posX, int posY, int widthX, int widthY, uint16_t color);
+void DisplayDrawRect(int posX, int posY, int widthX, int widthY, uint16_t color);
+void DisplayFillCircle(int32_t x, int32_t y, int32_t r, uint32_t color);
+void DisplaySetFont(const GFXfont *font);
+void DisplaySetTextSize(uint8_t size);
+void DisplaySetTextColor(uint16_t color);
+void DisplaySetCursor(int16_t x, int16_t y);
+void DisplayPrintString(const char* text);
+void DisplayPrintChar(char text);
+void DisplayDrawLine(int32_t x0, int32_t y0, int32_t x1, int32_t y1, uint32_t color);
+
+
+
 void drawRectContour(int posX, int posY, int widthX, int widthY, int contourThickness, uint16_t color);
 
 struct Vector2 {
@@ -46,7 +76,7 @@ void displayPrintUsingPreviousParams(
     ShortString text,
     Vector2 pos
 );
-bool IsDisplayTouchedTimeBuffer(Vector2& touchPos);
+bool IsDisplayTouchedTimeBuffer(Vector2& touchPos, bool useCalibration);
 
 
 

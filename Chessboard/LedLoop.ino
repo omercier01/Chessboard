@@ -190,7 +190,7 @@ void addActiveLedMove(char pieces[8][8], Move move) {
 
 
 void takeActiveLedsMutex() {
-    while(activeLedsBeingWrittenOrRead) {vTaskDelay(1);}
+    //while(activeLedsBeingWrittenOrRead) {vTaskDelay(1);}
     activeLedsBeingWrittenOrRead = true;    
 }
 
@@ -200,16 +200,16 @@ void releaseActiveLedsMutex() {
 }
 
 
-void ledLoop(void* parameter) {
+void ledLoop(void* /*parameter*/) {
 
-    while(true) {
+    //while(true) {
         // update LEDs
-        takeActiveLedsMutex();
+        //takeActiveLedsMutex();
         lightNextActiveLed();
-        releaseActiveLedsMutex();  
+        //releaseActiveLedsMutex();  
 
-        vTaskDelay(1);  
-    }
+        //vTaskDelay(1);  
+    //}
 }
 
 

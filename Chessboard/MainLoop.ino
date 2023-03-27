@@ -11,10 +11,19 @@
 void mainLoop() {
 
     timeMs = millis();
+
+    //ledLoop(nullptr);
+    //networkLoop(nullptr);
     
     Vector2 touchPos;
 
     mainModeButtonPressed = digitalRead(PIN_MAINMODE_BUTTON);
+    if(mainModeButtonPressed) {
+        Serial.println("BUTTON YES");
+    } else {
+        //Serial.println("BUTTON NO");
+    }
+
     if(
         mainModeButtonPressed && !prevMainModeButtonPressed &&
         abs(int(timeMs - mainModeButtonPressedTimePrev)) > mainModeButtonPressedTimeThreshold) // to avoid the button falsely reporting quick button pressed
@@ -56,6 +65,6 @@ void mainLoop() {
         break;
     }
 
-    vTaskDelay(1); // so other threads can run
+    //vTaskDelay(1); // so other threads can run
     
 }

@@ -11,7 +11,7 @@ void mainLoop_LedTest() {
     if(bMainModeDirty) {
         ledTestId = 0;
 
-        pDisplay->fillScreen(WHITE);
+        DisplayFillScreen(WHITE);
         displayPrint("Testing LEDs", Vector2(0,20), FreeSans12pt7b, 1, BLACK);
         
         bMainModeDirty = false;

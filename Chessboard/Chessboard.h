@@ -1,36 +1,81 @@
 
 #pragma once
 
-#define PIN_TFT_SCK    18 // can't be changed
-#define PIN_TFT_MOSI   23 // can't be changed
-#define PIN_TFT_MISO   19 // can't be changed
-#define PIN_TFT_CS     22 
-#define PIN_TFT_DC     21
-#define PIN_TFT_RESET  17
+// define only one board to use
+//#define BOARD_DEF_ESP32
+#define BOARD_DEF_RP2040
 
-#define PIN_TFT_TOUCH_CS 16
+#if defined(BOARD_DEF_ESP32)
+    #define PIN_TFT_SCK    18 // can't be changed
+    #define PIN_TFT_MOSI   23 // can't be changed
+    #define PIN_TFT_MISO   19 // can't be changed
+    #define PIN_TFT_CS     22 
+    #define PIN_TFT_DC     21
+    #define PIN_TFT_RESET  17
 
-#define PIN_MAINMODE_BUTTON 2
+    #define PIN_TFT_TOUCH_CS 16
 
-#define PIN_SWITCH_IN_0 36
-#define PIN_SWITCH_IN_1 39
-#define PIN_SWITCH_IN_2 34
-#define PIN_SWITCH_IN_3 35
+    #define PIN_MAINMODE_BUTTON 15
 
-#define PIN_SWITCH_QUERY_0 15
-#define PIN_SWITCH_QUERY_1 0
-#define PIN_SWITCH_QUERY_2 4
-#define PIN_SWITCH_QUERY_3 5
+    #define PIN_SWITCH_IN_0 36
+    #define PIN_SWITCH_IN_1 39
+    #define PIN_SWITCH_IN_2 34
+    #define PIN_SWITCH_IN_3 35
 
-#define PIN_LED_POS_0 32
-#define PIN_LED_POS_1 33
-#define PIN_LED_POS_2 25
-#define PIN_LED_POS_3 26
+    #define PIN_SWITCH_QUERY_0 15
+    #define PIN_SWITCH_QUERY_1 0
+    #define PIN_SWITCH_QUERY_2 4
+    #define PIN_SWITCH_QUERY_3 5
 
-#define PIN_LED_NEG_0 27
-#define PIN_LED_NEG_1 14
-#define PIN_LED_NEG_2 12
-#define PIN_LED_NEG_3 13
+    #define PIN_LED_POS_0 32
+    #define PIN_LED_POS_1 33
+    #define PIN_LED_POS_2 25
+    #define PIN_LED_POS_3 26
+
+    #define PIN_LED_NEG_0 27
+    #define PIN_LED_NEG_1 14
+    #define PIN_LED_NEG_2 12
+    #define PIN_LED_NEG_3 13
+
+
+#elif defined(BOARD_DEF_RP2040)
+
+    // pins for the display and touch are defined in
+    // C:\Users\<user>\Documents\Arduino\libraries\TFT_eSPI\User_Setups\Setup60_RP2040_ILI9341.h
+    // or wherever your arduino libraries are. Also uncomment the line
+    // #include <User_Setups/Setup60_RP2040_ILI9341.h>
+    // in C:\Users\<user>\Documents\Arduino\libraries\TFT_eSPI\User_Setup_Select.h .
+    // The pins used are
+    // TFT_MISO  0
+    // TFT_MOSI  3
+    // TFT_SCLK  2
+    // TFT_CS   4
+    // TFT_DC   5
+    // TFT_RST  6
+    // TOUCH_CS 7
+
+    #define PIN_MAINMODE_BUTTON 15
+
+    #define PIN_SWITCH_IN_0 36
+    #define PIN_SWITCH_IN_1 39
+    #define PIN_SWITCH_IN_2 34
+    #define PIN_SWITCH_IN_3 35
+
+    #define PIN_SWITCH_QUERY_0 16
+    #define PIN_SWITCH_QUERY_1 19
+    #define PIN_SWITCH_QUERY_2 17
+    #define PIN_SWITCH_QUERY_3 18
+
+    #define PIN_LED_POS_0 32
+    #define PIN_LED_POS_1 33
+    #define PIN_LED_POS_2 25
+    #define PIN_LED_POS_3 26
+
+    #define PIN_LED_NEG_0 27
+    #define PIN_LED_NEG_1 14
+    #define PIN_LED_NEG_2 12
+    #define PIN_LED_NEG_3 13
+#endif
 
 
 #define DISPLAY_PIXELS_WIDTH 240
@@ -71,7 +116,8 @@
 
 // making this too large creates random problems (e.g. HTTP requests failing because not enough memory)
 // ideally would be 6000 to cover possible max moves, but 1400 is plenty
-#define MAX_NB_MOVES 1400
+//#define MAX_NB_MOVES 1400
+#define MAX_NB_MOVES 100
 
 // sizes for custom fixed-length strings (to avoid allocating too much Strings on the heap)
 #define SHORT_STRING_LENGTH 32
@@ -91,16 +137,30 @@ const int networkTaskStackSize = 30000;
 const int ledTaskStackSize = 1000;
 
 
-#include "XPT2046_Touchscreen.h"
-#include <Arduino_GFX_Library.h>
+#if defined(BOARD_DEF_ESP32)
+    #include "XPT2046_Touchscreen.h"
+    #include <Arduino_GFX_Library.h>
+
+    #include "Fonts/FreeSansBold18pt7b.h"
+    #include "Fonts/FreeSansBold24pt7b.h"
+    #include "Fonts/FreeSans12pt7b.h"
+#elif defined(BOARD_DEF_RP2040)
+    #include <SPI.h>
+    #include <TFT_eSPI.h>
+
+    #define WHITE TFT_WHITE
+    #define BLACK TFT_BLACK
+    #define RED TFT_RED
+    #define DARKGREEN TFT_DARKGREEN
+    #define GREEN TFT_GREEN
+#endif
+
+
 #include <WiFi.h>
 #include <HTTPClient.h>
-#include <Preferences.h>
 #include <qrcode_renamed.h>
 
-#include "Fonts/FreeSansBold18pt7b.h"
-#include "Fonts/FreeSansBold24pt7b.h"
-#include "Fonts/FreeSans12pt7b.h"
+
 #include "Fonts/ChessFont25.h"
 
 #define ARDUINOJSON_ENABLE_ARDUINO_STREAM 1
@@ -221,11 +281,14 @@ std::shared_ptr<HTTPClient> httpClientStream = std::make_shared<HTTPClient>();
 WiFiClient * wifiClientStream = 0;
 std::shared_ptr<HTTPClient> httpClientApi = std::make_shared<HTTPClient>();
 
-XPT2046_Touchscreen * pTouch = 0;
-Arduino_ILI9341 * pDisplay = 0; // 240×320 pixels
-Arduino_ESP32SPI bus;
+#if defined(BOARD_DEF_ESP32)
+    XPT2046_Touchscreen * pTouch = 0;
+    Arduino_ILI9341 * pDisplay = 0; // 240×320 pixels
+    Arduino_ESP32SPI bus;
+#elif defined(BOARD_DEF_RP2040)
+    extern TFT_eSPI tft;
+#endif
 
-Preferences preferences;
 
 unsigned long timeMs = millis();
 
@@ -251,7 +314,8 @@ Move userMove;
 
 
 // looks like I need to slow this down if the display wires are longer
-const int32_t displaySpeed = 32 * 1000 * 1000;
+//const int32_t displaySpeed = 32 * 1000 * 1000;
+const int32_t displaySpeed = 8 * 1000 * 1000;
 
 Menu currentMenu;
 enum class MenuType {

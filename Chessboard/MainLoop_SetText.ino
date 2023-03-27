@@ -6,6 +6,7 @@
 //
 
 void mainLoop_SetText() {
+    //Serial.println("SET TEXT");
     if(bMainModeDirty) {
         keyboardText = "";
         setMenuKeyboard1();
@@ -41,7 +42,7 @@ void mainLoop_SetText() {
     }
 
     Vector2 touchPos;
-    if(IsDisplayTouchedTimeBuffer(touchPos)) {
+    if(IsDisplayTouchedTimeBuffer(touchPos, true)) {
         currentMenu.onClick(touchPos);
     }
 }
