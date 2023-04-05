@@ -31,8 +31,6 @@ void getPlayerStream() {
     while(!success) {
         httpClientStream->begin("https://lichess.org/api/stream/event");
         httpClientStream->addHeader("Authorization", (LongString("Bearer ") + lichessToken).c_str());
-        //httpClientStream->begin("http://httpbin.org");
-        //httpClientStream->begin("https://www.httpvshttps.com/");
         int httpCode = httpClientStream->GET();
         Serial.println("player stream httpCode: " + String(httpCode));
         if(httpCode > 0) {
@@ -134,20 +132,17 @@ void sendMove(Move move) {
     while(true) {
 
         if(gameState == GameState::Error) {
-            //break;
             return;
         }
 
         wl_status_t wifiStatus = wl_status_t(WiFi.status());
-        //Serial.println((LongString("wifi status: ") + ShortString(wifiStatus)).c_str());
         if(wifiStatus != wl_status_t::WL_CONNECTED) {
             streamsDirty = true;
 
             bGameStateDirty = true;
             gameState = GameState::Connecting;
 
-            //continue;
-            return;
+            continue;
         }
 
         if(wifiStatus == wl_status_t::WL_CONNECTED && streamsDirty) {
@@ -214,7 +209,6 @@ void sendMove(Move move) {
                 errorMessage[2] = "";
                 errorMessage[3] = "Please reboot.";
                 bGameStateDirty = true;
-                //break; // break out of while(true);
                 return;
             }
 
@@ -247,7 +241,6 @@ void sendMove(Move move) {
                 errorMessage[2] = "";
                 errorMessage[3] = "Please reboot.";
                 bGameStateDirty = true;
-                //break; // break out of while(true)
                 return;
             }
 
@@ -279,7 +272,6 @@ void sendMove(Move move) {
                 errorMessage[1] = "";
                 errorMessage[2] = "Please reboot.";
                 bGameStateDirty = true;
-                //break; // break out of while(true)
                 return;
             }
 
@@ -312,7 +304,6 @@ void sendMove(Move move) {
                 errorMessage[1] = "";
                 errorMessage[2] = "Please reboot.";
                 bGameStateDirty = true;
-                //break; // break out of while(true)
                 return;
             }
 
@@ -343,7 +334,6 @@ void sendMove(Move move) {
                     errorMessage[1] = "";
                     errorMessage[2] = "Please reboot.";
                     bGameStateDirty = true;
-                    //break; // break out of while(true)
                     return;
                 }
             }
@@ -382,7 +372,6 @@ void sendMove(Move move) {
                 errorMessage[1] = "";
                 errorMessage[2] = "Please reboot.";
                 bGameStateDirty = true;
-                //break; // break out of while(true)
                 return;
             }
 
@@ -417,7 +406,6 @@ void sendMove(Move move) {
                 errorMessage[1] = "";
                 errorMessage[2] = "Please reboot.";
                 bGameStateDirty = true;
-                //break; // break out of while(true)
                 return;
             }
 
@@ -524,7 +512,6 @@ void sendMove(Move move) {
                 errorMessage[1] = "";
                 errorMessage[2] = "Please reboot.";
                 bGameStateDirty = true;
-                //break; // break out of while(true);
                 return;
             }
         }
@@ -532,10 +519,5 @@ void sendMove(Move move) {
         // some delay here otherwise some thread watchdog complains that the core is idle.
         // could be much smaller, like 10ms
         delay(200); 
-    }
-
-    // empty infinite loop after error message is displayed
-    while(true) {
-        delay(100);
     }
 }

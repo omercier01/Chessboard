@@ -15,7 +15,7 @@
 
     #define PIN_TFT_TOUCH_CS 16
 
-    #define PIN_MAINMODE_BUTTON 15
+    #define PIN_MAINMODE_BUTTON 2
 
     #define PIN_SWITCH_IN_0 36
     #define PIN_SWITCH_IN_1 39
@@ -56,25 +56,25 @@
 
     #define PIN_MAINMODE_BUTTON 15
 
-    #define PIN_SWITCH_IN_0 36
-    #define PIN_SWITCH_IN_1 39
-    #define PIN_SWITCH_IN_2 34
-    #define PIN_SWITCH_IN_3 35
+    #define PIN_SWITCH_IN_0 20 // 36
+    #define PIN_SWITCH_IN_1 28 // 39
+    #define PIN_SWITCH_IN_2 22 // 34
+    #define PIN_SWITCH_IN_3 21 // 35
 
-    #define PIN_SWITCH_QUERY_0 16
-    #define PIN_SWITCH_QUERY_1 19
-    #define PIN_SWITCH_QUERY_2 17
-    #define PIN_SWITCH_QUERY_3 18
+    #define PIN_SWITCH_QUERY_0 14 // 15
+    #define PIN_SWITCH_QUERY_1 1 // 0
+    #define PIN_SWITCH_QUERY_2 9 // 4
+    #define PIN_SWITCH_QUERY_3 8 // 5
 
-    #define PIN_LED_POS_0 32
-    #define PIN_LED_POS_1 33
-    #define PIN_LED_POS_2 25
-    #define PIN_LED_POS_3 26
+    #define PIN_LED_POS_0 19 // 32
+    #define PIN_LED_POS_1 17 // 33
+    #define PIN_LED_POS_2 18 // 25
+    #define PIN_LED_POS_3 16 // 26
 
-    #define PIN_LED_NEG_0 27
-    #define PIN_LED_NEG_1 14
-    #define PIN_LED_NEG_2 12
-    #define PIN_LED_NEG_3 13
+    #define PIN_LED_NEG_0 10 // 27
+    #define PIN_LED_NEG_1 12 // 14
+    #define PIN_LED_NEG_2 11 // 12
+    #define PIN_LED_NEG_3 13 // 13
 #endif
 
 
@@ -116,8 +116,8 @@
 
 // making this too large creates random problems (e.g. HTTP requests failing because not enough memory)
 // ideally would be 6000 to cover possible max moves, but 1400 is plenty
-#define MAX_NB_MOVES 1400
-//#define MAX_NB_MOVES 100
+//#define MAX_NB_MOVES 1400
+#define MAX_NB_MOVES 100
 
 // sizes for custom fixed-length strings (to avoid allocating too much Strings on the heap)
 #define SHORT_STRING_LENGTH 32
@@ -251,6 +251,7 @@ int nbKnownServerMoves = 0;
 int prevNbKnownServerMoves = 0;
 
 int switchDelayAfterQueryMs = 1; // to avoid crosstalk when querying switches
+//int switchDelayAfterQueryMs = 10; // to avoid crosstalk when querying switches
 
 
 enum class GameState {
@@ -315,7 +316,7 @@ Move userMove;
 
 // looks like I need to slow this down if the display wires are longer
 //const int32_t displaySpeed = 32 * 1000 * 1000;
-const int32_t displaySpeed = 32 * 1000 * 1000;
+const int32_t displaySpeed = 8 * 1000 * 1000;
 
 Menu currentMenu;
 enum class MenuType {

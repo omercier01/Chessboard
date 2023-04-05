@@ -12,17 +12,11 @@ void mainLoop() {
 
     timeMs = millis();
 
-    //ledLoop(nullptr);
-    //networkLoop(nullptr);
+    ledLoop(nullptr);
     
     Vector2 touchPos;
 
     mainModeButtonPressed = digitalRead(PIN_MAINMODE_BUTTON);
-    if(mainModeButtonPressed) {
-        Serial.println("BUTTON YES");
-    } else {
-        //Serial.println("BUTTON NO");
-    }
 
     if(
         mainModeButtonPressed && !prevMainModeButtonPressed &&
@@ -66,5 +60,6 @@ void mainLoop() {
     }
 
     //vTaskDelay(1); // so other threads can run
+    //delay(5);
     
 }

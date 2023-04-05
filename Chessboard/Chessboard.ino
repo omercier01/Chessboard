@@ -80,6 +80,8 @@ void setup() {
     tft.init();
     tft.setRotation(2);
 #endif
+
+LightLed(-1,-1);
     
 
 
@@ -104,8 +106,6 @@ void setup() {
         }
     }
 
-    //LightLed(-1,-1);
-
     // document to receive json info from lichess
     jsonDocStream = new DynamicJsonDocument(jsonDocumentAllocSize);
 
@@ -126,4 +126,5 @@ void setup() {
 // main loop runs on core 1 by default
 void loop() {
     mainLoop();
+    //delay(10);
 }
