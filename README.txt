@@ -20,6 +20,8 @@ MIT License (see LICENSE.txt)
 
 ArduinoJson https://arduinojson.org
 
+StreamUtils https://github.com/bblanchon/ArduinoStreamUtils
+
 QRCode https://github.com/ricmoo/qrcode/
 (had to rename that one to qrcode_renamed, otherwise it would conflict with other qrcode libraries)
 

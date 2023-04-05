@@ -235,6 +235,7 @@ void userMakingMoveMenuClick() {
             gameState = GameState::UserMakingPromotion;
             bGameStateDirty = true;
         } else {
+
             userMoveToSend = userMoveTentative;
             userMoveTentative = Move();
             gameState = GameState::WaitingToReceiveUserMoveConfirmation;
@@ -1078,8 +1079,6 @@ void onClickKey() {
         currentMenu.titles[1].text = keyboardText;
         currentMenu.titles[1].rightAlignX();
         currentMenu.drawTitles();
-
-        Serial.println(c);
     }
 }
 
@@ -1088,8 +1087,6 @@ void onErase() {
     currentMenu.titles[1].text = ShortString(keyboardText, ShortString::Alignment::Right);
     currentMenu.titles[1].rightAlignX();
     currentMenu.drawTitles();
-
-    Serial.println("ERASE");
 }
 
 
@@ -1129,8 +1126,6 @@ void onSubmit() {
     currentMenu.titles[1].text = "";
     currentMenu.titles[1].rightAlignX();
     currentMenu.drawTitles();
-
-    Serial.println("SUBMIT");
 }
 
 

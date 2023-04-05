@@ -12,10 +12,7 @@ void StartLichessStream() {
 
     WiFi.begin(strdup(wifiName.c_str()), wifiPassword.c_str());
     while (WiFi.status() != WL_CONNECTED)
-    //while (true)
     {
-        Serial.println(wifiName.c_str());
-        Serial.println(wifiPassword.c_str());
         delay(500);
     }
 
@@ -149,7 +146,6 @@ void sendMove(Move move) {
             getPlayerStream();
             streamsDirty = false;
         }
-
 
         if(!gameOngoing) {
             checkStreamPlayer();
@@ -460,7 +456,6 @@ void sendMove(Move move) {
                         httpClientApi->begin("https://lichess.org/api/challenge/ai");
                         httpClientApi->addHeader("Authorization", (LongString("Bearer ") + lichessToken).c_str(), true);
                         httpClientApi->addHeader("Content-Type", "application/json", false);
-                        Serial.println("AFTER SET HANDSHAKE");
                         httpCode = httpClientApi->POST("{\"level\":1}");
                         Serial.println((ShortString("gameSeekInfo httpCode: ") + ShortString(httpCode)).c_str());
                         if(httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_CREATED) {

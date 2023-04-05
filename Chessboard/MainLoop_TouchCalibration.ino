@@ -50,32 +50,14 @@ void mainLoop_TouchCalibration() {
         tc.dydx = invDet * (invMat[1][0] * t[0].y + invMat[1][1] * t[1].y + invMat[1][2] * t[2].y);
         tc.dydy = invDet * (invMat[2][0] * t[0].y + invMat[2][1] * t[1].y + invMat[2][2] * t[2].y);
         
-        Serial.println("[");
-        Serial.println(tc.x0);
-        Serial.println(tc.dxdx);
-        Serial.println(tc.dxdy);
-        Serial.println(tc.y0);
-        Serial.println(tc.dydx);
-        Serial.println(tc.dydy);
-        Serial.println("]");
-
-        Serial.println("AAAAA");
         PersistentParamBegin();
-        Serial.println("BBBBB");
         PersistentParamSaveFloat(PersistentParamType::TouchX0, tc.x0);
-        Serial.println("CCCCC");
         PersistentParamSaveFloat(PersistentParamType::TouchDxDx, tc.dxdx);
-        Serial.println("DDDDD");
         PersistentParamSaveFloat(PersistentParamType::TouchDxDy, tc.dxdy);
-        Serial.println("EEEEE");
         PersistentParamSaveFloat(PersistentParamType::TouchY0, tc.y0);
-        Serial.println("FFFFF");
         PersistentParamSaveFloat(PersistentParamType::TouchDyDx, tc.dydx);
-        Serial.println("GGGGG");
         PersistentParamSaveFloat(PersistentParamType::TouchDyDy, tc.dydy);
-        Serial.println("HHHHH");
         PersistentParamEnd();
-        Serial.println("IIIII");
         
         mainMode = MainMode::TouchTest;
         bMainModeDirty = true;
