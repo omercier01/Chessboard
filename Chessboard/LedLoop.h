@@ -11,5 +11,5 @@ void takeActiveLedsMutex();
 void releaseActiveLedsMutex();
 void LightLed(int x, int y);
 
-void ledLoop(void* parameter);
+bool ledLoop(repeating_timer *t);
 void lightNextActiveLed();

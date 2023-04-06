@@ -44,7 +44,7 @@ void getPlayerStream() {
             // stream failed
         }
 
-        delay(10000);
+        delay(500);
     }
 }
 
@@ -513,6 +513,6 @@ void sendMove(Move move) {
 
         // some delay here otherwise some thread watchdog complains that the core is idle.
         // could be much smaller, like 10ms
-        delay(200); 
+        delay(100); 
     }
 }

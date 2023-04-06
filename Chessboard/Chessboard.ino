@@ -9,6 +9,8 @@
 
 TFT_eSPI tft;
 
+struct repeating_timer timer;
+
 void setup() {
     
     Serial.begin(115200);
@@ -73,10 +75,6 @@ void setup() {
     pTouch = new XPT2046_Touchscreen(PIN_TFT_TOUCH_CS);
     pTouch->begin();
 #elif defined(BOARD_DEF_RP2040)
-    //bus = Arduino_RPiPicoSPI(TFT_DC, TFT_CS, TFT_SCLK, TFT_MOSI, TFT_MISO);
-    //pDisplay = new Arduino_ILI9341(&bus, TFT_RST);
-
-    //tft = TFT_eSPI();
     tft.init();
     tft.setRotation(2);
 #endif
@@ -94,14 +92,12 @@ LightLed(-1,-1);
     xTaskCreatePinnedToCore( ledLoop, "ledLoop", ledTaskStackSize, NULL, 2, &ledTask, BaseType_t(1));
 #elif defined(BOARD_DEF_RP2040)
     multicore_launch_core1(networkLoop);
-    //StartLichessStream();
 #endif
 
     for(int i = 0; i < 8; i++) {
         for(int j = 0; j < 8; j++) {
             clientBoardBool[i][j] = 0;
             clientBoardBoolTempWrite[i][j] = 0;
-            //clientBoardPieces[i][j] = 0;
             serverBoardPieces[i][j] = 0;
         }
     }
@@ -121,10 +117,13 @@ LightLed(-1,-1);
     timeLastTimerReceived = millis();
 
     Serial.println("initialized.");
+    
+    add_repeating_timer_us(1000, ledLoop, NULL, &timer);
 }
+
+
 
 // main loop runs on core 1 by default
 void loop() {
     mainLoop();
-    //delay(10);
 }

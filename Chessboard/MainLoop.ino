@@ -12,8 +12,6 @@ void mainLoop() {
 
     timeMs = millis();
 
-    ledLoop(nullptr);
-    
     Vector2 touchPos;
 
     mainModeButtonPressed = digitalRead(PIN_MAINMODE_BUTTON);

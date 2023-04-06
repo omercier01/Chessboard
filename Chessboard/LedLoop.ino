@@ -200,16 +200,9 @@ void releaseActiveLedsMutex() {
 }
 
 
-void ledLoop(void* /*parameter*/) {
-
-    //while(true) {
-        // update LEDs
-        //takeActiveLedsMutex();
-        lightNextActiveLed();
-        //releaseActiveLedsMutex();  
-
-        //vTaskDelay(1);  
-    //}
+bool ledLoop(repeating_timer *t) {
+    lightNextActiveLed();
+    return true;
 }
 
 
