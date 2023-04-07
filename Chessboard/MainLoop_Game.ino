@@ -313,7 +313,6 @@ char getOpponentPromotionChar(char c) {
 
 void mainLoop_Game() {
 
-
     int diff;
 
     if(bMainModeDirty) {

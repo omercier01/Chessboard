@@ -28,6 +28,12 @@ void mainLoop() {
     }
     prevMainModeButtonPressed = mainModeButtonPressed;
 
+    if(mainMode == MainMode::LedTest) {
+        runLedLoop = false;
+    } else {
+        runLedLoop = true;
+    }
+
     switch(mainMode) {
     case MainMode::Game:
         mainLoop_Game();

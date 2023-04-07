@@ -256,6 +256,8 @@ int prevNbKnownServerMoves = 0;
 int switchDelayAfterQueryMs = 1; // to avoid crosstalk when querying switches
 //int switchDelayAfterQueryMs = 10; // to avoid crosstalk when querying switches
 
+bool runLedLoop = true;
+
 
 enum class GameState {
     Connecting,

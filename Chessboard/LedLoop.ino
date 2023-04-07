@@ -201,7 +201,9 @@ void releaseActiveLedsMutex() {
 
 
 bool ledLoop(repeating_timer *t) {
-    lightNextActiveLed();
+    if(runLedLoop) {
+        lightNextActiveLed();
+    }
     return true;
 }
 
