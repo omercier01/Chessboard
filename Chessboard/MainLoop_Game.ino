@@ -536,6 +536,12 @@ void mainLoop_Game() {
         opponentGoneTimeLeftMs = opponentGoneTimeLeftWhenReceivedMs -
                                   (millis() - opponentGoneTimeReceivedMs);
         opponentGoneTimeLeftMs = max((long)0, (long)opponentGoneTimeLeftMs);
+
+        // fix missing opponentGone=false events
+        if((millis() - opponentGoneTimeReceivedMs) > forgetOpponentGoneTimerAfterNbSecs*1000) {
+            opponentIsGone = false;
+        }
+        
     }
 
     // update draw timer
@@ -562,7 +568,12 @@ void mainLoop_Game() {
                 ShortString newLabelStr = prettifyTime(opponentGoneTimeLeftMs);
                 currentMenu.titles[1].text = ShortString("Oppon. left: ")  + newLabelStr;
                 currentMenu.titles[1].centerX();
-            } else {
+            } else if(!notificationOpponentRefusesDraw &&
+                      !notificationOpponentOffersDraw &&
+                      !notificationOpponentOffersMoveTakeback &&
+                      !notificationOpponentPromotes &&
+                      !notificationVictoryClaimRefused
+            ){
                 currentMenu.titles[1].text = ShortString("");
                 opponentIsGoneDrawDirty = false;
             }

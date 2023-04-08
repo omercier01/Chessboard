@@ -136,6 +136,12 @@ const int jsonDocumentAllocSize = 5*MAX_NB_MOVES + 1000;
 const int networkTaskStackSize = 30000;
 const int ledTaskStackSize = 1000;
 
+// The events when a gone opponent comes back are not always received. However, when
+// an opponent is gone, we continuously receive opponentGone events every few seconds.
+// So if no opponentGone have been received for that number of seconds, just assume
+// that the opponetn is back.
+const int forgetOpponentGoneTimerAfterNbSecs = 10;
+
 
 #if defined(BOARD_DEF_ESP32)
     #include "XPT2046_Touchscreen.h"
