@@ -17,6 +17,8 @@ struct FixedString {
 
     FixedString() {}
 
+    FixedString(const FixedString<MAXLENGTH>& other) = default;
+
     FixedString(const char* str) {
         if(strlen(str) > MAXLENGTH) {
             Serial.println("FixedString ERROR FixedString(...) overflow");

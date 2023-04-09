@@ -6,11 +6,11 @@
 #include "Board.h"
 
 void MenuLabel::draw() {
-    pDisplay->setFont(&font);
-    pDisplay->setTextSize(textSize);
-    pDisplay->setTextColor(textColor);
-    pDisplay->setCursor(pos.x, pos.y);
-    pDisplay->print(text.c_str());
+    DisplaySetFont(&font);
+    DisplaySetTextSize(textSize);
+    DisplaySetTextColor(textColor);
+    DisplaySetCursor(pos.x, pos.y);
+    DisplayPrintString(text.c_str());
 }
 
 void MenuLabel::centerX(int iDivX, int nbDivX) {
@@ -29,9 +29,9 @@ void MenuLabel::rightAlignX(int iDivX, int nbDivX) {
 
 void MenuButton::draw() {
     if(fill) {
-        pDisplay->fillRect(minPos.x, minPos.y, width.x, width.y, color);
+        DisplayFillRect(minPos.x, minPos.y, width.x, width.y, color);
     } else {
-        pDisplay->drawRect(minPos.x, minPos.y, width.x, width.y, color);
+        DisplayDrawRect(minPos.x, minPos.y, width.x, width.y, color);
     }
     label.draw();
 }
@@ -116,7 +116,7 @@ void Menu::drawTitles() {
     } else {
         titleMaxHeight = DISPLAY_PIXELS_HEIGHT / 4; // rough estimate, just so we don't clear the whole screen.
     }
-    pDisplay->fillRect(0, 0, DISPLAY_PIXELS_WIDTH, titleMaxHeight, backgroundColor);
+    DisplayFillRect(0, 0, DISPLAY_PIXELS_WIDTH, titleMaxHeight, backgroundColor);
 
     for(int i = 0; i < nbTitles; i++) {
         titles[i].draw();
@@ -131,7 +131,7 @@ void Menu::drawButtons() {
 
 
 void Menu::draw() {
-    pDisplay->fillScreen(backgroundColor);
+    DisplayFillScreen(backgroundColor);
     drawTitles();
     drawButtons();
     if(extraDrawFunct) {
@@ -186,11 +186,11 @@ void onClaimVictory() {
     bGameStateDirty = true;
 }
 
-void reedSwitchTestExtraDraw(Menu& menu) {
+void reedSwitchTestExtraDraw(Menu& /*menu*/) {
     drawBoardBool(clientBoardBool);
 }
 
-void menuDrawBoardChar(Menu& menu) {
+void menuDrawBoardChar(Menu& /*menu*/) {
     drawBoardChar(serverBoardPieces);
 }
 
@@ -234,6 +234,7 @@ void userMakingMoveMenuClick() {
             gameState = GameState::UserMakingPromotion;
             bGameStateDirty = true;
         } else {
+
             userMoveToSend = userMoveTentative;
             userMoveTentative = Move();
             gameState = GameState::WaitingToReceiveUserMoveConfirmation;
@@ -319,7 +320,7 @@ void updateDrawTimer(Menu& menu) {
             if(oldLabelStr.length() != newLabelStr.length()) {
                 xStart = button.minPos.x + timerButtonClearFillRectMarginX;
             } else {
-                for(int ic = 0; ic < newLabelStr.length(); ic++) {
+                for(unsigned int ic = 0; ic < newLabelStr.length(); ic++) {
                     if(newLabelStr.charAt(ic) != oldLabelStr.charAt(ic)) {
                         break;
                     }
@@ -328,7 +329,7 @@ void updateDrawTimer(Menu& menu) {
                 }
             }
 
-            pDisplay->fillRect(xStart,
+            DisplayFillRect(xStart,
                                button.minPos.y + timerButtonClearFillRectMarginY,
                                xEnd - xStart, 
                                button.width.y - 2*timerButtonClearFillRectMarginY,
@@ -575,9 +576,9 @@ ShortString getIncrementString() {
 }
 
 void SaveTimePerSide() {
-preferences.begin("Chessboard", false);
-    preferences.putInt("twop_time", twoPlayersTimePerSide);
-    preferences.end();
+    PersistentParamBegin();
+    PersistentParamSaveInt(PersistentParamType::TwoPlayersTimePerSide, twoPlayersTimePerSide);
+    PersistentParamEnd();
     currentMenu.titles[1].text = getTimePerSideString();
     currentMenu.titles[1].centerX();
     currentMenu.titles[2].text = getIncrementString();
@@ -596,9 +597,9 @@ void clampAndSaveIncrement() {
     twoPlayersIncrement = clamp(twoPlayersIncrement,
                                 twoPlayersIncrementMin,
                                 twoPlayersIncrementMax);
-    preferences.begin("Chessboard", false);
-    preferences.putInt("twop_inc", twoPlayersIncrement);
-    preferences.end();
+    PersistentParamBegin();
+    PersistentParamSaveInt(PersistentParamType::TwoPlayersIncrement, twoPlayersIncrement);
+    PersistentParamEnd();
     currentMenu.titles[1].text = getTimePerSideString();
     currentMenu.titles[1].centerX();
     currentMenu.titles[2].text = getIncrementString();
@@ -773,7 +774,7 @@ void setMenuGameEndedRatings() {
 }
 
 
-void drawQrCode(Menu& menu) {
+void drawQrCode(Menu& /*menu*/) {
     if(qrCodeUrl != "") {
 
         Vector2i qrCodeTopLeft;
@@ -782,7 +783,7 @@ void drawQrCode(Menu& menu) {
 
         for(int y = 0; y < qrCode.size; y++) {
             for(int x = 0; x < qrCode.size; x++) {
-                pDisplay->fillRect(
+                DisplayFillRect(
                     qrCodeTopLeft.x + x*qrCodeDrawScale,
                     qrCodeTopLeft.y + y*qrCodeDrawScale,
                     qrCodeDrawScale,
@@ -1077,8 +1078,6 @@ void onClickKey() {
         currentMenu.titles[1].text = keyboardText;
         currentMenu.titles[1].rightAlignX();
         currentMenu.drawTitles();
-
-        Serial.println(c);
     }
 }
 
@@ -1087,37 +1086,35 @@ void onErase() {
     currentMenu.titles[1].text = ShortString(keyboardText, ShortString::Alignment::Right);
     currentMenu.titles[1].rightAlignX();
     currentMenu.drawTitles();
-
-    Serial.println("ERASE");
 }
 
 
 void onSubmit() {
     switch(mainMode) {
         case MainMode::WifiName:
-            preferences.begin("Chessboard", false);
-            preferences.putString("wifi_name", keyboardText.c_str());
-            preferences.end();
+            PersistentParamBegin();
+            PersistentParamSaveString(PersistentParamType::WifiName, keyboardText.c_str());
+            PersistentParamEnd();
             break;
         case MainMode::WifiPassword:
-            preferences.begin("Chessboard", false);
-            preferences.putString("wifi_password", keyboardText.c_str());
-            preferences.end();
+            PersistentParamBegin();
+            PersistentParamSaveString(PersistentParamType::WifiPassword, keyboardText.c_str());
+            PersistentParamEnd();
             break;
         case MainMode::LichessToken:
-            preferences.begin("Chessboard", false);
-            preferences.putString("lichess_token", keyboardText.c_str());
-            preferences.end();
+            PersistentParamBegin();
+            PersistentParamSaveString(PersistentParamType::LichessToken, keyboardText.c_str());
+            PersistentParamEnd();
             break;
         case MainMode::LichessBoardAccountUsername:
-            preferences.begin("Chessboard", false);
-            preferences.putString("lich_brd_name", keyboardText.c_str());
-            preferences.end();
+            PersistentParamBegin();
+            PersistentParamSaveString(PersistentParamType::LichessBoardAccountUsername, keyboardText.c_str());
+            PersistentParamEnd();
             break;
         case MainMode::LichessBoardAccountToken:
-            preferences.begin("Chessboard", false);
-            preferences.putString("lich_brd_tok", keyboardText.c_str());
-            preferences.end();
+            PersistentParamBegin();
+            PersistentParamSaveString(PersistentParamType::LichessBoardAccountToken, keyboardText.c_str());
+            PersistentParamEnd();
             break;
         case MainMode::Count:
         default:
@@ -1128,8 +1125,6 @@ void onSubmit() {
     currentMenu.titles[1].text = "";
     currentMenu.titles[1].rightAlignX();
     currentMenu.drawTitles();
-
-    Serial.println("SUBMIT");
 }
 
 

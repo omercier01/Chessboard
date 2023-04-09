@@ -71,6 +71,9 @@ void endGame() {
                 playerEndRatingStr = "NA";
             }
 
+            // delay hack so the menu draw isn't skipped if the rating fetching goes too fast
+            delay(100);
+
             if(gameState == GameState::GameEnded) {
                 gameState = GameState::GameEndedWithPlayerRatingsOrQrCode;
                 bGameStateDirty = true;
@@ -102,8 +105,8 @@ void checkStreamPlayer() {
         return;
     }
 
-
-    deserializeJson(*jsonDocStream, *wifiClientStream);
+    ReadBufferingStream bufferedFile(*wifiClientStream, BUFFERED_FILE_SIZE);
+    deserializeJson(*jsonDocStream, bufferedFile);
 
     ShortString type("null");
     if(jsonDocStream->containsKey("type")) {

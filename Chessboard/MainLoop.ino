@@ -11,10 +11,11 @@
 void mainLoop() {
 
     timeMs = millis();
-    
+
     Vector2 touchPos;
 
     mainModeButtonPressed = digitalRead(PIN_MAINMODE_BUTTON);
+
     if(
         mainModeButtonPressed && !prevMainModeButtonPressed &&
         abs(int(timeMs - mainModeButtonPressedTimePrev)) > mainModeButtonPressedTimeThreshold) // to avoid the button falsely reporting quick button pressed
@@ -26,6 +27,12 @@ void mainLoop() {
 
     }
     prevMainModeButtonPressed = mainModeButtonPressed;
+
+    if(mainMode == MainMode::LedTest) {
+        runLedLoop = false;
+    } else {
+        runLedLoop = true;
+    }
 
     switch(mainMode) {
     case MainMode::Game:
@@ -56,6 +63,8 @@ void mainLoop() {
         break;
     }
 
+#if defined(BOARD_DEF_ESP32)
     vTaskDelay(1); // so other threads can run
+#endif
     
 }

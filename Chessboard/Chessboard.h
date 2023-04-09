@@ -1,36 +1,81 @@
 
 #pragma once
 
-#define PIN_TFT_SCK    18 // can't be changed
-#define PIN_TFT_MOSI   23 // can't be changed
-#define PIN_TFT_MISO   19 // can't be changed
-#define PIN_TFT_CS     22 
-#define PIN_TFT_DC     21
-#define PIN_TFT_RESET  17
+// define only one board to use
+//#define BOARD_DEF_ESP32
+#define BOARD_DEF_RP2040
 
-#define PIN_TFT_TOUCH_CS 16
+#if defined(BOARD_DEF_ESP32)
+    #define PIN_TFT_SCK    18 // can't be changed
+    #define PIN_TFT_MOSI   23 // can't be changed
+    #define PIN_TFT_MISO   19 // can't be changed
+    #define PIN_TFT_CS     22 
+    #define PIN_TFT_DC     21
+    #define PIN_TFT_RESET  17
 
-#define PIN_MAINMODE_BUTTON 2
+    #define PIN_TFT_TOUCH_CS 16
 
-#define PIN_SWITCH_IN_0 36
-#define PIN_SWITCH_IN_1 39
-#define PIN_SWITCH_IN_2 34
-#define PIN_SWITCH_IN_3 35
+    #define PIN_MAINMODE_BUTTON 2
 
-#define PIN_SWITCH_QUERY_0 15
-#define PIN_SWITCH_QUERY_1 0
-#define PIN_SWITCH_QUERY_2 4
-#define PIN_SWITCH_QUERY_3 5
+    #define PIN_SWITCH_IN_0 36
+    #define PIN_SWITCH_IN_1 39
+    #define PIN_SWITCH_IN_2 34
+    #define PIN_SWITCH_IN_3 35
 
-#define PIN_LED_POS_0 32
-#define PIN_LED_POS_1 33
-#define PIN_LED_POS_2 25
-#define PIN_LED_POS_3 26
+    #define PIN_SWITCH_QUERY_0 15
+    #define PIN_SWITCH_QUERY_1 0
+    #define PIN_SWITCH_QUERY_2 4
+    #define PIN_SWITCH_QUERY_3 5
 
-#define PIN_LED_NEG_0 27
-#define PIN_LED_NEG_1 14
-#define PIN_LED_NEG_2 12
-#define PIN_LED_NEG_3 13
+    #define PIN_LED_POS_0 32
+    #define PIN_LED_POS_1 33
+    #define PIN_LED_POS_2 25
+    #define PIN_LED_POS_3 26
+
+    #define PIN_LED_NEG_0 27
+    #define PIN_LED_NEG_1 14
+    #define PIN_LED_NEG_2 12
+    #define PIN_LED_NEG_3 13
+
+
+#elif defined(BOARD_DEF_RP2040)
+
+    // pins for the display and touch are defined in
+    // C:\Users\<user>\Documents\Arduino\libraries\TFT_eSPI\User_Setups\Setup60_RP2040_ILI9341.h
+    // or wherever your arduino libraries are. Also uncomment the line
+    // #include <User_Setups/Setup60_RP2040_ILI9341.h>
+    // in C:\Users\<user>\Documents\Arduino\libraries\TFT_eSPI\User_Setup_Select.h .
+    // The pins used are
+    // TFT_MISO  0
+    // TFT_MOSI  3
+    // TFT_SCLK  2
+    // TFT_CS   4
+    // TFT_DC   5
+    // TFT_RST  6
+    // TOUCH_CS 7
+
+    #define PIN_MAINMODE_BUTTON 15
+
+    #define PIN_SWITCH_IN_0 20
+    #define PIN_SWITCH_IN_1 28
+    #define PIN_SWITCH_IN_2 22
+    #define PIN_SWITCH_IN_3 21
+
+    #define PIN_SWITCH_QUERY_0 14
+    #define PIN_SWITCH_QUERY_1 1
+    #define PIN_SWITCH_QUERY_2 9
+    #define PIN_SWITCH_QUERY_3 8
+
+    #define PIN_LED_POS_0 19
+    #define PIN_LED_POS_1 17
+    #define PIN_LED_POS_2 18
+    #define PIN_LED_POS_3 16
+
+    #define PIN_LED_NEG_0 10
+    #define PIN_LED_NEG_1 12
+    #define PIN_LED_NEG_2 11
+    #define PIN_LED_NEG_3 13
+#endif
 
 
 #define DISPLAY_PIXELS_WIDTH 240
@@ -69,7 +114,8 @@
 #define FONT_PIECE_BLACK_P_BLACKLAYER (40+22)
 #define FONT_PIECE_BLACK_P_WHITELAYER (40+23)
 
-// making this too large creates random problems (e.g. HTTP requests failing because not enough memory)
+// making this too large creates random problems on ESP32
+// (e.g. HTTP requests failing because not enough memory)
 // ideally would be 6000 to cover possible max moves, but 1400 is plenty
 #define MAX_NB_MOVES 1400
 
@@ -90,21 +136,44 @@ const int jsonDocumentAllocSize = 5*MAX_NB_MOVES + 1000;
 const int networkTaskStackSize = 30000;
 const int ledTaskStackSize = 1000;
 
+// The events when a gone opponent comes back are not always received. However, when
+// an opponent is gone, we continuously receive opponentGone events every few seconds.
+// So if no opponentGone have been received for that number of seconds, just assume
+// that the opponetn is back.
+const int forgetOpponentGoneTimerAfterNbSecs = 10;
 
-#include "XPT2046_Touchscreen.h"
-#include <Arduino_GFX_Library.h>
+
+#if defined(BOARD_DEF_ESP32)
+    #include "XPT2046_Touchscreen.h"
+    #include <Arduino_GFX_Library.h>
+
+    #include "Fonts/FreeSansBold18pt7b.h"
+    #include "Fonts/FreeSansBold24pt7b.h"
+    #include "Fonts/FreeSans12pt7b.h"
+#elif defined(BOARD_DEF_RP2040)
+    #include <SPI.h>
+    #include <TFT_eSPI.h>
+
+    #define WHITE TFT_WHITE
+    #define BLACK TFT_BLACK
+    #define RED TFT_RED
+    #define DARKGREEN TFT_DARKGREEN
+    #define GREEN TFT_GREEN
+#endif
+
+
 #include <WiFi.h>
 #include <HTTPClient.h>
-#include <Preferences.h>
 #include <qrcode_renamed.h>
 
-#include "Fonts/FreeSansBold18pt7b.h"
-#include "Fonts/FreeSansBold24pt7b.h"
-#include "Fonts/FreeSans12pt7b.h"
+
 #include "Fonts/ChessFont25.h"
 
 #define ARDUINOJSON_ENABLE_ARDUINO_STREAM 1
 #include <ArduinoJson.h>
+#include <StreamUtils.h>
+
+#define BUFFERED_FILE_SIZE 64
 
 // tweaks so VSCode stops complaining
 #if VISUAL_STUDIO_CODE
@@ -192,6 +261,8 @@ int prevNbKnownServerMoves = 0;
 
 int switchDelayAfterQueryMs = 1; // to avoid crosstalk when querying switches
 
+bool runLedLoop = true;
+
 
 enum class GameState {
     Connecting,
@@ -221,11 +292,14 @@ std::shared_ptr<HTTPClient> httpClientStream = std::make_shared<HTTPClient>();
 WiFiClient * wifiClientStream = 0;
 std::shared_ptr<HTTPClient> httpClientApi = std::make_shared<HTTPClient>();
 
-XPT2046_Touchscreen * pTouch = 0;
-Arduino_ILI9341 * pDisplay = 0; // 240×320 pixels
-Arduino_ESP32SPI bus;
+#if defined(BOARD_DEF_ESP32)
+    XPT2046_Touchscreen * pTouch = 0;
+    Arduino_ILI9341 * pDisplay = 0; // 240×320 pixels
+    Arduino_ESP32SPI bus;
+#elif defined(BOARD_DEF_RP2040)
+    extern TFT_eSPI tft;
+#endif
 
-Preferences preferences;
 
 unsigned long timeMs = millis();
 
@@ -376,21 +450,21 @@ struct GameSeekInfo {
 GameSeekInfo gameSeekInfo;
 
 
-LongString wifiName;
-LongString wifiPassword;
-LongString lichessToken;
-LongString lichessBoardAccountUsername;
-LongString lichessBoardAccountToken;
+LongString wifiName = "";
+LongString wifiPassword = "";
+LongString lichessToken = "";
+LongString lichessBoardAccountUsername = "";
+LongString lichessBoardAccountToken = "";
 
 bool streamsDirty = true;
 
-ShortString playerStartRatingStr;
-ShortString playerEndRatingStr;
-LongString playerName;
-ShortString opponentStartRatingStr;
-ShortString opponentEndRatingStr;
-LongString opponentName;
-ShortString gameSpeedStr;
+ShortString playerStartRatingStr = "";
+ShortString playerEndRatingStr = "";
+LongString playerName = "";
+ShortString opponentStartRatingStr = "";
+ShortString opponentEndRatingStr = "";
+LongString opponentName = "";
+ShortString gameSpeedStr = "";
 ShortString gameSeekOrFoundButtonText = "";
 
 

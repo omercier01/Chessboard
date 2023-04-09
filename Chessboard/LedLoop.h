@@ -11,5 +11,10 @@ void takeActiveLedsMutex();
 void releaseActiveLedsMutex();
 void LightLed(int x, int y);
 
-void ledLoop(void* parameter);
+#if defined(BOARD_DEF_ESP32)
+    void ledLoop(void* parameter);
+#elif defined(BOARD_DEF_RP2040)
+    bool ledLoop(repeating_timer *t);
+#endif
+
 void lightNextActiveLed();

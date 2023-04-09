@@ -190,7 +190,9 @@ void addActiveLedMove(char pieces[8][8], Move move) {
 
 
 void takeActiveLedsMutex() {
+#if defined(BOARD_DEF_ESP32)
     while(activeLedsBeingWrittenOrRead) {vTaskDelay(1);}
+#endif
     activeLedsBeingWrittenOrRead = true;    
 }
 
@@ -199,19 +201,24 @@ void releaseActiveLedsMutex() {
     activeLedsBeingWrittenOrRead = false;
 }
 
-
-void ledLoop(void* parameter) {
-
-    while(true) {
-        // update LEDs
-        takeActiveLedsMutex();
-        lightNextActiveLed();
-        releaseActiveLedsMutex();  
-
-        vTaskDelay(1);  
+#if defined(BOARD_DEF_ESP32)
+    void ledLoop(void* parameter) {
+        while(true) {
+            // update LEDs
+            takeActiveLedsMutex();
+            lightNextActiveLed();
+            releaseActiveLedsMutex();  
+            vTaskDelay(1);  
+        }
     }
-}
-
+#elif defined(BOARD_DEF_RP2040)
+    bool ledLoop(repeating_timer *t) {
+        if(runLedLoop) {
+            lightNextActiveLed();
+        }
+        return true;
+    }
+#endif
 
 void lightNextActiveLed() {
     static unsigned int tick = 0;

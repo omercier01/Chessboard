@@ -15,6 +15,11 @@ void StartLichessStream() {
     {
         delay(500);
     }
+
+    Serial.println("Connected.");
+
+    httpClientStream->setInsecure();
+    httpClientApi->setInsecure();
 }
 
 
@@ -38,6 +43,8 @@ void getPlayerStream() {
         } else {
             // stream failed
         }
+
+        delay(500);
     }
 }
 
@@ -111,19 +118,21 @@ void sendMove(Move move) {
     
 }
 
-
-void networkLoop(void* parameter) {
+#if defined(BOARD_DEF_ESP32)
+    void networkLoop(void* /*parameter*/) {
+#elif defined(BOARD_DEF_RP2040)
+    void networkLoop() {
+#endif
 
     StartLichessStream();
 
     while(true) {
 
         if(gameState == GameState::Error) {
-            break;
+            return;
         }
 
-        wl_status_t wifiStatus = WiFi.status();
-        Serial.println((LongString("wifi status: ") + ShortString(wifiStatus)).c_str());
+        wl_status_t wifiStatus = wl_status_t(WiFi.status());
         if(wifiStatus != wl_status_t::WL_CONNECTED) {
             streamsDirty = true;
 
@@ -137,7 +146,6 @@ void networkLoop(void* parameter) {
             getPlayerStream();
             streamsDirty = false;
         }
-
 
         if(!gameOngoing) {
             checkStreamPlayer();
@@ -165,10 +173,10 @@ void networkLoop(void* parameter) {
 
         // Send dummy move to keep the connection alive
         if(gameId != "" &&
-           millis() - timeLastDummyMovePost > timeRefreshDummyMovePost)
+           long(millis()) - timeLastDummyMovePost > timeRefreshDummyMovePost)
         {
             // just to make sure we're not running out of memory, useful for debugging
-            Serial.println((ShortString("getFreeHeap: ") + ShortString(int(ESP.getFreeHeap()))).c_str());
+            Serial.println((ShortString("getFreeHeap: ") + ShortString(int(rp2040.getFreeHeap()))).c_str());
 
             Serial.println("Sending dummy move");
 
@@ -197,7 +205,7 @@ void networkLoop(void* parameter) {
                 errorMessage[2] = "";
                 errorMessage[3] = "Please reboot.";
                 bGameStateDirty = true;
-                break; // break out of while(true);;
+                return;
             }
 
             timeLastDummyMovePost = millis();
@@ -229,7 +237,7 @@ void networkLoop(void* parameter) {
                 errorMessage[2] = "";
                 errorMessage[3] = "Please reboot.";
                 bGameStateDirty = true;
-                break; // break out of while(true)
+                return;
             }
 
             sendTakebackRefusal = false;
@@ -260,7 +268,7 @@ void networkLoop(void* parameter) {
                 errorMessage[1] = "";
                 errorMessage[2] = "Please reboot.";
                 bGameStateDirty = true;
-                break; // break out of while(true)
+                return;
             }
 
             sendRefuseDraw = false;
@@ -292,7 +300,7 @@ void networkLoop(void* parameter) {
                 errorMessage[1] = "";
                 errorMessage[2] = "Please reboot.";
                 bGameStateDirty = true;
-                break; // break out of while(true)
+                return;
             }
 
             if(isTwoPlayersGame) {
@@ -322,7 +330,7 @@ void networkLoop(void* parameter) {
                     errorMessage[1] = "";
                     errorMessage[2] = "Please reboot.";
                     bGameStateDirty = true;
-                    break; // break out of while(true)
+                    return;
                 }
             }
 
@@ -360,7 +368,7 @@ void networkLoop(void* parameter) {
                 errorMessage[1] = "";
                 errorMessage[2] = "Please reboot.";
                 bGameStateDirty = true;
-                break; // break out of while(true)
+                return;
             }
 
             sendResign = false;
@@ -394,7 +402,7 @@ void networkLoop(void* parameter) {
                 errorMessage[1] = "";
                 errorMessage[2] = "Please reboot.";
                 bGameStateDirty = true;
-                break; // break out of while(true)
+                return;
             }
 
             sendClaimVictory = false;
@@ -448,7 +456,6 @@ void networkLoop(void* parameter) {
                         httpClientApi->begin("https://lichess.org/api/challenge/ai");
                         httpClientApi->addHeader("Authorization", (LongString("Bearer ") + lichessToken).c_str(), true);
                         httpClientApi->addHeader("Content-Type", "application/json", false);
-                        Serial.println("AFTER SET HANDSHAKE");
                         httpCode = httpClientApi->POST("{\"level\":1}");
                         Serial.println((ShortString("gameSeekInfo httpCode: ") + ShortString(httpCode)).c_str());
                         if(httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_CREATED) {
@@ -500,17 +507,12 @@ void networkLoop(void* parameter) {
                 errorMessage[1] = "";
                 errorMessage[2] = "Please reboot.";
                 bGameStateDirty = true;
-                break; // break out of while(true);
+                return;
             }
         }
 
         // some delay here otherwise some thread watchdog complains that the core is idle.
         // could be much smaller, like 10ms
-        delay(200); 
-    }
-
-    // empty infinite loop after error message is displayed
-    while(true) {
-        delay(100);
+        delay(100); 
     }
 }

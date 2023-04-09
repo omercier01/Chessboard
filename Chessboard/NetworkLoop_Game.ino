@@ -474,7 +474,8 @@ void checkStreamGame() {
 
     if(wifiClientStream && wifiClientStream->available()) {
 
-        deserializeJson(*jsonDocStream, *wifiClientStream);
+        ReadBufferingStream bufferedFile(*wifiClientStream, BUFFERED_FILE_SIZE);
+        deserializeJson(*jsonDocStream, bufferedFile);
 
         if(jsonDocStream && !jsonDocStream->isNull() && jsonDocStream->containsKey("type")) {
             

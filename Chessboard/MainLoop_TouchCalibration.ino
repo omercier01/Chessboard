@@ -13,19 +13,19 @@ void mainLoop_TouchCalibration() {
     }
 
     if(bTouchCalibrationTargetIdDirty) {
-        pDisplay->fillScreen(WHITE);
+        DisplayFillScreen(WHITE);
         displayPrint("Touch Calibration", Vector2(0,20), FreeSans12pt7b, 1, BLACK);
 
         Vector2 p = calibTargetPts[touchCalibrationTargetId];
         float r = touchCalibrationTargetRadius;
-        pDisplay->drawLine(p.x, p.y - r, p.x, p.y + r, RED);
-        pDisplay->drawLine(p.x - r, p.y, p.x + r, p.y, RED);
+        DisplayDrawLine(p.x, p.y - r, p.x, p.y + r, RED);
+        DisplayDrawLine(p.x - r, p.y, p.x + r, p.y, RED);
 
         bTouchCalibrationTargetIdDirty = false;
     }
 
     Vector2 touchPos;
-    if(IsDisplayTouchedTimeBuffer(touchPos)) {
+    if(IsDisplayTouchedTimeBuffer(touchPos, false)) {
         calibUserPts[touchCalibrationTargetId].x = touchPos.x;
         calibUserPts[touchCalibrationTargetId].y = touchPos.y;
 
@@ -50,14 +50,14 @@ void mainLoop_TouchCalibration() {
         tc.dydx = invDet * (invMat[1][0] * t[0].y + invMat[1][1] * t[1].y + invMat[1][2] * t[2].y);
         tc.dydy = invDet * (invMat[2][0] * t[0].y + invMat[2][1] * t[1].y + invMat[2][2] * t[2].y);
         
-        preferences.begin("Chessboard", false);
-        preferences.putFloat("touch_x0", tc.x0);
-        preferences.putFloat("touch_dxdx", tc.dxdx);
-        preferences.putFloat("touch_dxdy", tc.dxdy);
-        preferences.putFloat("touch_y0", tc.y0);
-        preferences.putFloat("touch_dydx", tc.dydx);
-        preferences.putFloat("touch_dydy", tc.dydy);
-        preferences.end();
+        PersistentParamBegin();
+        PersistentParamSaveFloat(PersistentParamType::TouchX0, tc.x0);
+        PersistentParamSaveFloat(PersistentParamType::TouchDxDx, tc.dxdx);
+        PersistentParamSaveFloat(PersistentParamType::TouchDxDy, tc.dxdy);
+        PersistentParamSaveFloat(PersistentParamType::TouchY0, tc.y0);
+        PersistentParamSaveFloat(PersistentParamType::TouchDyDx, tc.dydx);
+        PersistentParamSaveFloat(PersistentParamType::TouchDyDy, tc.dydy);
+        PersistentParamEnd();
         
         mainMode = MainMode::TouchTest;
         bMainModeDirty = true;
