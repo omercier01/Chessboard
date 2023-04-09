@@ -2,8 +2,11 @@
 #include "Chessboard.h"
 
 void takeBoardBoolMutex() {
-    //while(clientBoardBoolBeingWrittenOrRead) {vTaskDelay(1);}
+#if defined(BOARD_DEF_ESP32)
+    while(clientBoardBoolBeingWrittenOrRead) {vTaskDelay(1);}
+#elif defined(BOARD_DEF_RP2040)
     clientBoardBoolBeingWrittenOrRead = true;
+#endif
 }
 
 void releaseBoardBoolMutex() {

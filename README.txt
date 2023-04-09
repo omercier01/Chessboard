@@ -2,7 +2,7 @@
 More info and video:
 http://www.oliviermercier.com/res/projects/chessboard/
 
-Code written with VSCode, built with the Arduino IDE, runs on a ESP32 (ESP-WROOM-32 38pins).
+Code builds with the Arduino IDE, runs on a ESP32 (ESP-WROOM-32 38pins) or Raspberry Pico W. Select the board in Chessboar.h (BOARD_DEF_ESP32 or BOARD_DEF_RP2040)
 
 Main game logic is in MainLoop_Game.ino .
 All network logic is in NetworkLoop.ino and NetworkLoop_<something>.ino .

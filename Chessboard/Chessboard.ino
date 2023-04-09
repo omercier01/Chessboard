@@ -17,7 +17,11 @@ void setup() {
 
     Serial.println("starting...");
     
+#if defined(BOARD_DEF_ESP32)
+    pinMode(PIN_MAINMODE_BUTTON, INPUT);
+#elif defined(BOARD_DEF_RP2040)
     pinMode(PIN_MAINMODE_BUTTON, INPUT_PULLDOWN);
+#endif
 
     pinMode(PIN_SWITCH_IN_0, INPUT);
     pinMode(PIN_SWITCH_IN_1, INPUT);

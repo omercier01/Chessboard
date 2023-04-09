@@ -63,7 +63,8 @@ void mainLoop() {
         break;
     }
 
-    //vTaskDelay(1); // so other threads can run
-    //delay(5);
+#if defined(BOARD_DEF_ESP32)
+    vTaskDelay(1); // so other threads can run
+#endif
     
 }

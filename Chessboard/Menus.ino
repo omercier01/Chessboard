@@ -131,7 +131,6 @@ void Menu::drawButtons() {
 
 
 void Menu::draw() {
-    Serial.println("MENU DRAW");
     DisplayFillScreen(backgroundColor);
     drawTitles();
     drawButtons();

@@ -114,10 +114,10 @@
 #define FONT_PIECE_BLACK_P_BLACKLAYER (40+22)
 #define FONT_PIECE_BLACK_P_WHITELAYER (40+23)
 
-// making this too large creates random problems (e.g. HTTP requests failing because not enough memory)
+// making this too large creates random problems on ESP32
+// (e.g. HTTP requests failing because not enough memory)
 // ideally would be 6000 to cover possible max moves, but 1400 is plenty
 #define MAX_NB_MOVES 1400
-//#define MAX_NB_MOVES 100
 
 // sizes for custom fixed-length strings (to avoid allocating too much Strings on the heap)
 #define SHORT_STRING_LENGTH 32
@@ -260,7 +260,6 @@ int nbKnownServerMoves = 0;
 int prevNbKnownServerMoves = 0;
 
 int switchDelayAfterQueryMs = 1; // to avoid crosstalk when querying switches
-//int switchDelayAfterQueryMs = 10; // to avoid crosstalk when querying switches
 
 bool runLedLoop = true;
 
@@ -326,7 +325,6 @@ Move userMove;
 
 
 // looks like I need to slow this down if the display wires are longer
-//const int32_t displaySpeed = 32 * 1000 * 1000;
 const int32_t displaySpeed = 32 * 1000 * 1000;
 
 Menu currentMenu;
