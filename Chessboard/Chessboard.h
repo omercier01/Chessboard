@@ -56,25 +56,25 @@
 
     #define PIN_MAINMODE_BUTTON 15
 
-    #define PIN_SWITCH_IN_0 20 // 36
-    #define PIN_SWITCH_IN_1 28 // 39
-    #define PIN_SWITCH_IN_2 22 // 34
-    #define PIN_SWITCH_IN_3 21 // 35
+    #define PIN_SWITCH_IN_0 20
+    #define PIN_SWITCH_IN_1 28
+    #define PIN_SWITCH_IN_2 22
+    #define PIN_SWITCH_IN_3 21
 
-    #define PIN_SWITCH_QUERY_0 14 // 15
-    #define PIN_SWITCH_QUERY_1 1 // 0
-    #define PIN_SWITCH_QUERY_2 9 // 4
-    #define PIN_SWITCH_QUERY_3 8 // 5
+    #define PIN_SWITCH_QUERY_0 14
+    #define PIN_SWITCH_QUERY_1 1
+    #define PIN_SWITCH_QUERY_2 9
+    #define PIN_SWITCH_QUERY_3 8
 
-    #define PIN_LED_POS_0 19 // 32
-    #define PIN_LED_POS_1 17 // 33
-    #define PIN_LED_POS_2 18 // 25
-    #define PIN_LED_POS_3 16 // 26
+    #define PIN_LED_POS_0 19
+    #define PIN_LED_POS_1 17
+    #define PIN_LED_POS_2 18
+    #define PIN_LED_POS_3 16
 
-    #define PIN_LED_NEG_0 10 // 27
-    #define PIN_LED_NEG_1 12 // 14
-    #define PIN_LED_NEG_2 11 // 12
-    #define PIN_LED_NEG_3 13 // 13
+    #define PIN_LED_NEG_0 10
+    #define PIN_LED_NEG_1 12
+    #define PIN_LED_NEG_2 11
+    #define PIN_LED_NEG_3 13
 #endif
 
 
