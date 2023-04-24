@@ -56,10 +56,10 @@
 
     #define PIN_MAINMODE_BUTTON 15
 
-    #define PIN_SWITCH_IN_0 20
-    #define PIN_SWITCH_IN_1 28
-    #define PIN_SWITCH_IN_2 22
-    #define PIN_SWITCH_IN_3 21
+    #define PIN_SWITCH_IN_0 21
+    #define PIN_SWITCH_IN_1 22
+    #define PIN_SWITCH_IN_2 28
+    #define PIN_SWITCH_IN_3 20
 
     #define PIN_SWITCH_QUERY_0 14
     #define PIN_SWITCH_QUERY_1 1
