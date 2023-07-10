@@ -9,11 +9,13 @@
 void StartLichessStream() {
 
     Serial.println("Connecting...");
-
     WiFi.begin(strdup(wifiName.c_str()), wifiPassword.c_str());
     while (WiFi.status() != WL_CONNECTED)
     {
+        WiFi.end();
         delay(500);
+        Serial.println("Connecting...");
+        WiFi.begin(strdup(wifiName.c_str()), wifiPassword.c_str());
     }
 
     Serial.println("Connected.");

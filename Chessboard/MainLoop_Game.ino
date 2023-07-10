@@ -651,31 +651,17 @@ void mainLoop_Game() {
         }
     }
 
-
-
-    // update switches (one quad group per frame)
-    static int switchGroupTick = 0;
-    int switchGroupX = (switchGroupTick/1) % 8;
-    int switchGroupY = (switchGroupTick/8) % 2;
-    static bool squareQuad[4];
-    checkSwitchQuad(squareQuad, switchGroupX, switchGroupY);
-
-    int yOffset = (switchGroupY == 0 ? 0 : 4);
-    for(int i = 0; i < 4; i++) {
-        clientBoardBoolTempWrite[switchGroupX][i+yOffset] = squareQuad[i];
-    }
-    switchGroupTick++;
-    if(switchGroupTick % 16 == 0) {
-        // update readable data
-        takeBoardBoolMutex();
-        for(int i = 0; i < 8; i++) {
-            for(int j = 0; j < 8; j++) {
-                clientBoardBool[i][j] = clientBoardBoolTempWrite[i][j];
-            }
+    bool newSquares[8][8];
+    checkAllSwitches(newSquares);
+    // update readable data
+    takeBoardBoolMutex();
+    for(int i = 0; i < 8; i++) {
+        for(int j = 0; j < 8; j++) {
+            clientBoardBool[i][j] = newSquares[i][j];
         }
-        releaseBoardBoolMutex();
     }
-    
+    releaseBoardBoolMutex();
+
     Vector2 touchPos;
     if(IsDisplayTouchedTimeBuffer(touchPos, true)) {
         currentMenu.onClick(touchPos);
