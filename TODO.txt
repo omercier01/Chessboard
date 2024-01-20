@@ -1,3 +1,9 @@
 - for 2 player otb, when a problem is detected, have the other player give extra time so the clock is effectively paused. Then press screen to restart clock once the problem is fixed.
 
 - make the 2player otb games be played by two separate accounts, so the board games are not logged on the main account.
+
+- Add wifi connection status indicator
+
+- Try to reconnect to wifi automatically or reboot automatically when we reach an error state.
+
+- Use ESP32 with external antenna to improve wifi signal stability?
