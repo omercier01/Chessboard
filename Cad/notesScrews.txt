@@ -1,9 +1,0 @@
-Display: M3x6 screw, M3x4mm insert
-
-Breadboard: M2x4 screw, 3x3.5 insert
-
-HDMI: M3x8 screw,  6x5 insert
-
-bottom cover: SUNK M2x8, M2x6 insert
-
-miniUsb: m3x6mm inserts, m3x6 screws
