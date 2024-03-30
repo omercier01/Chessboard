@@ -9,7 +9,7 @@
     }
 
     TS_Point TouchscreenGetPoint() {
-        pTouch->getPoint();
+        return pTouch->getPoint();
     }
 
     void DisplayFillScreen(uint16_t color) {
@@ -29,10 +29,10 @@
     }
 
     void DisplaySetFont(const GFXfont *font) {
-        pDisplay->setFont(&font);
+        pDisplay->setFont(font);
     }
 
-    void DisplaySetTextSize(uint8_t size) {
+    void DisplaySetTextSize(uint8_t textSize) {
         pDisplay->setTextSize(textSize);
     }
 
@@ -41,7 +41,7 @@
     }
 
     void DisplaySetCursor(int16_t x, int16_t y) {
-        pDisplay->setCursor(pos.x, pos.y);
+        pDisplay->setCursor(x, y);
     }
 
     void DisplayPrintString(const char* text) {

@@ -7,9 +7,10 @@
 #include "Menus.h"
 #include "PersistentParam.h"
 
-TFT_eSPI tft;
-
-struct repeating_timer timer;
+#if defined(BOARD_DEF_RP2040)
+    TFT_eSPI tft;
+    struct repeating_timer timer;
+#endif
 
 void setup() {
     
@@ -122,7 +123,9 @@ LightLed(-1,-1);
 
     Serial.println("initialized.");
     
+#if defined(BOARD_DEF_RP2040)
     add_repeating_timer_us(1000, ledLoop, NULL, &timer);
+#endif
 }
 
 

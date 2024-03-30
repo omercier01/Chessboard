@@ -12,16 +12,22 @@ void StartLichessStream() {
     WiFi.begin(strdup(wifiName.c_str()), wifiPassword.c_str());
     while (WiFi.status() != WL_CONNECTED)
     {
+#if defined(BOARD_DEF_RP2040)
         WiFi.end();
+#endif
         delay(500);
         Serial.println("Connecting...");
+#if defined(BOARD_DEF_RP2040)
         WiFi.begin(strdup(wifiName.c_str()), wifiPassword.c_str());
+#endif
     }
 
     Serial.println("Connected.");
 
+#if defined(BOARD_DEF_RP2040)
     httpClientStream->setInsecure();
     httpClientApi->setInsecure();
+#endif
 }
 
 
@@ -178,7 +184,9 @@ void sendMove(Move move) {
            long(millis()) - timeLastDummyMovePost > timeRefreshDummyMovePost)
         {
             // just to make sure we're not running out of memory, useful for debugging
+#if defined(BOARD_DEF_RP2040)
             Serial.println((ShortString("getFreeHeap: ") + ShortString(int(rp2040.getFreeHeap()))).c_str());
+#endif
 
             Serial.println("Sending dummy move");
 

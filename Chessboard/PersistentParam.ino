@@ -8,50 +8,51 @@
 
     Preferences preferences;
 
-    ShortString TypeToString(Type type) {
+    ShortString TypeToString(PersistentParamType type) {
         switch(type) {
-        case TouchX0:
+        case PersistentParamType::TouchX0:
             return ShortString("touch_x0");
             break;
-        case TouchDxDx:
+        case PersistentParamType::TouchDxDx:
             return ShortString("touch_dxdx");
             break;
-        case TouchDxDy:
+        case PersistentParamType::TouchDxDy:
             return ShortString("touch_dxdy");
             break;
-        case TouchY0:
+        case PersistentParamType::TouchY0:
             return ShortString("touch_y0");
             break;
-        case TouchDyDx:
+        case PersistentParamType::TouchDyDx:
             return ShortString("touch_dydx");
             break;
-        case TouchDyDy:
+        case PersistentParamType::TouchDyDy:
             return ShortString("touch_dydy");
             break;
-        case WifiName:
+        case PersistentParamType::WifiName:
             return ShortString("wifi_name");
             break;
-        case WifiPassword:
+        case PersistentParamType::WifiPassword:
             return ShortString("wifi_password");
             break;
-        case LichessToken:
+        case PersistentParamType::LichessToken:
             return ShortString("lichess_token");
             break;
-        case LichessBoardAccountUsername:
+        case PersistentParamType::LichessBoardAccountUsername:
             return ShortString("lich_brd_name");
             break;
-        case LichessBoardAccountToken:
+        case PersistentParamType::LichessBoardAccountToken:
             return ShortString("lich_brd_tok");
             break;
-        case TwoPlayersTimePerSide:
+        case PersistentParamType::TwoPlayersTimePerSide:
             return ShortString("twop_time");
             break;
-        case TwoPlayersIncremen:
+        case PersistentParamType::TwoPlayersIncrement:
             return ShortString("twop_inc");
             break;
 
         default:
             Serial.println("TypeToString: unknown type.");
+            return ShortString("");
             break;
         }
     }
@@ -61,27 +62,27 @@
     }
 
     void PersistentParamSaveFloat(PersistentParamType type, float value) {
-        preferences.putFloat(TypeToString(type), value);
+        preferences.putFloat(TypeToString(type).c_str(), value);
     }
 
     float PersistentParamLoadFloat(PersistentParamType type) {
-        return preferences.getFloat(TypeToString(type), 0.f);
+        return preferences.getFloat(TypeToString(type).c_str(), 0.f);
     }
 
     void PersistentParamSaveString(PersistentParamType type, LongString value) {
-        preferences.putString(TypeToString(type), value);
+        preferences.putString(TypeToString(type).c_str(), value.c_str());
     }
 
     LongString PersistentParamLoadString(PersistentParamType type) {
-        return preferences.getString(TypeToString(type), "");
+        return LongString(preferences.getString(TypeToString(type).c_str(), "").c_str());
     }
 
     void PersistentParamSaveInt(PersistentParamType type, int value) {
-        preferences.putInt(TypeToString(type), value);
+        preferences.putInt(TypeToString(type).c_str(), value);
     }
 
     int PersistentParamLoadInt(PersistentParamType type) {
-        return preferences.getInt(TypeToString(type), 0);
+        return preferences.getInt(TypeToString(type).c_str(), 0);
     }
 
     void PersistentParamEnd() {

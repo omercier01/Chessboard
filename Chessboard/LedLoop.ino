@@ -213,6 +213,7 @@ void releaseActiveLedsMutex() {
     }
 #elif defined(BOARD_DEF_RP2040)
     bool ledLoop(repeating_timer *t) {
+        (void)t;
         if(runLedLoop) {
             lightNextActiveLed();
         }
