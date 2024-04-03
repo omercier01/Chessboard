@@ -164,7 +164,7 @@ const int forgetOpponentGoneTimerAfterNbSecs = 10;
 
 #include <WiFi.h>
 #include <HTTPClient.h>
-#include <qrcode_renamed.h>
+#include "qrcode.h"
 
 
 #include "Fonts/ChessFont25.h"
@@ -174,15 +174,6 @@ const int forgetOpponentGoneTimerAfterNbSecs = 10;
 #include <StreamUtils.h>
 
 #define BUFFERED_FILE_SIZE 64
-
-// tweaks so VSCode stops complaining
-#if VISUAL_STUDIO_CODE
-    #define configSUPPORT_DYNAMIC_ALLOCATION 1
-    #include "freertos/task.h"
-
-    #define CONFIG_IDF_TARGET_ESP32 1
-    #include "Arduino_ESP32SPI.h"
-#endif
 
 #include "Util.h"
 #include "Menus.h"

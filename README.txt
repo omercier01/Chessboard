@@ -16,16 +16,38 @@ See Cad/Chessboard.f3z for the Fusion360 CAD files for the computer case, see Ca
 MIT License (see LICENSE.txt)
 
 
---- LIBRARIES ---
 
-ArduinoJson https://arduinojson.org
+--- INSTALLATION ---
 
-StreamUtils https://github.com/bblanchon/ArduinoStreamUtils
+install Arduino IDE 2.3.2
 
-QRCode https://github.com/ricmoo/qrcode/
-(had to rename that one to qrcode_renamed, otherwise it would conflict with other qrcode libraries)
+- For ESP32, can be installed from the Arduino IDE. esp32 by Espressif Systems, version 2.0.11 . Then select the board ESP32 Dev Module .
+- For Raspberry Pico, follow this to install the Pico W on the Arduino IDE: https://dronebotworkshop.com/picow-arduino/  (TLDR add this string to the board manager list in the Arduino IDE Preference menu, and then the PicoW will show up in the boards manager: https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json ). Then from the board manager, install Raspberry Pi Pico/RP2040 by Earle F. Philhower, III version 3.1.0 . THE VERSION MATTERS. The code might not compile on more recent versions. Then Select the board Raspberry Pi Pico W .
 
-XPT2046_Touchscreen https://github.com/PaulStoffregen/XPT2046_Touchscreen
+Install the following libraries from the Arduino library manager:
+- TFT_eSPI 2.5.43
+- ArduinoJson 7.0.4
+- StreamUtils 1.8.0
+- FreeRTOS 11.0.1-5
+- XPT2046_Touchscreen 1.4
+- GFX Library for Arduino 1.4.6
+
+in C:\Users\<user>\Documents\Arduino\libraries\TFT_eSPI\User_Setup_Select.h , comment the line
+#include <User_Setup.h>
+and uncomment
+#include <User_Setups/Setup60_RP2040_ILI9341.h>
+and in Setup60_RP2040_ILI9341.h set the pins as
+
+#define TFT_MISO  0
+#define TFT_MOSI  3
+#define TFT_SCLK  2
+#define TFT_CS   4  // Chip select control pin
+#define TFT_DC   5  // Data Command control pin
+#define TFT_RST  6  // Reset pin (could connect to Arduino RESET pin)
+//#define TFT_BL     // LED back-light
+#define TOUCH_CS 7     // Chip select pin (T_CS) of touch screen
+
+
 
 
 --- OTHER ASSETS ---
@@ -44,9 +66,9 @@ https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode
 https://en.wikipedia.org/wiki/Chess_symbols_in_Unicode#/media/File:Chess_symbols.svg
 
 
---- ESP32 INSTALL WITH ARDUINO IDE ---
+--- ESP32 MANUAL INSTALL AND UPLOAD ---
 
-To use ESP32 in the Arduino IDE, see https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html . I then used the "ESP32 Dev Module" in Tools -> Board
+Iff needed, the ESP32 board can also be installed manually, see https://docs.espressif.com/projects/arduino-esp32/en/latest/installing.html . I then used the "ESP32 Dev Module" in Tools -> Board
 
 Some ESP32 dev boards have issues when uploading code, see https://randomnerdtutorials.com/solved-failed-to-connect-to-esp32-timed-out-waiting-for-packet-header/
 (I used a 2.2uF capacitor)
